@@ -1,8 +1,10 @@
-from flask import render_template, flash, redirect, g
+from flask import render_template, flash, redirect, g, session
 from app import app
 from .forms import LoginForm, RegisterForm
 from model import User, Post
 from model import database
+
+app.secret_key = 'F12Zr47j\3yX R~X@H!jmM]Lwf/,?KT'
 
 @app.before_request
 def before_request():
@@ -39,7 +41,9 @@ def login():
     if form.validate_on_submit():
         try:
             user = User.get(email = form.email.data, password = form.password.data)
-            flash('Login Success with email= %s' % user.email)
+            session['user_email'] = user.email
+            session['user_id'] = user.id
+            flash('Login Success with id= %s' % session['user_id'])
             return redirect('/index')
         except User.DoesNotExist:
             flash('Login Fail for email= %s, password=%s, remember_me=%s' %
