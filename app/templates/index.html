@@ -30,7 +30,7 @@
                           {{post.title}}
                       </h3>
                   </a>
-                  <p class="post-meta">Posted by <a href="#">{{post.author.email}}</a> {{post.created_date}}</p>
+                  <p class="post-meta">Posted by <a href="#">{{post.author.email}}</a> <script>document.write(moment("{{post.created_date}}", "YYYY-MM-DD HH:mm:ss").fromNow());</script></p>
               </div>
               <hr>
               {% endfor %}
