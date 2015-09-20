@@ -19,20 +19,8 @@ def after_request(response):
 @app.route('/')
 @app.route('/index')
 def index():
-    user = {'nickname' : 'Thanh Nguyen'}
-    posts = [
-        {
-            'author': {'nickname' : 'Ha'},
-            'body': "Life of Pi"
-        },
-        {
-            'author': {'nickname' : 'Linh'},
-            'body': "Adventure"
-        }
-    ]
-    return render_template("index.html",
-            user = user,
-            posts = posts)
+    posts = Post.select()
+    return render_template("index.html", posts = posts)
 
 @app.route('/login', methods=['POST', 'GET'])
 def login():
