@@ -1,5 +1,5 @@
 from flask.ext.wtf import Form
-from wtforms import StringField, BooleanField, PasswordField
+from wtforms import StringField, BooleanField, PasswordField, TextAreaField
 from wtforms.validators import DataRequired, Email, EqualTo, InputRequired, Length
 
 class LoginForm(Form):
@@ -25,6 +25,6 @@ class ChangePasswordForm(Form):
         EqualTo('confirm', message='Passwords must match')])
     confirm  = PasswordField('Repeat Password')
 
-class PostForm(Form):
+class CreatePostForm(Form):
     title = StringField('title', validators = [DataRequired()])
-    content = StringField('content', validators = [DataRequired()])
+    content = TextAreaField('content', validators = [DataRequired()])

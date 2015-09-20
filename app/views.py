@@ -1,8 +1,7 @@
 from flask import render_template, flash, redirect, g, session
 from app import app
-from .forms import LoginForm, RegisterForm
-from model import User, Post
-from model import database
+from .forms import LoginForm, RegisterForm, CreatePostForm
+from .models import database, User, Post
 
 app.secret_key = 'F12Zr47j\3yX R~X@H!jmM]Lwf/,?KT'
 
@@ -58,12 +57,12 @@ def register():
     form = RegisterForm()
     if form.validate_on_submit():
         user = User.create(email = form.email.data, password = form.password.data)
+        user.save();
         flash('Resgister succesfully, welcome')
         return redirect('/index')
     return render_template('register.html',
             title = 'Register',
             form = form)
-
 
 @app.route('/hello')
 def hello():
@@ -78,6 +77,27 @@ def show_user_profile(username):
 def show_post(post_id):
     # Show the user profile for that user
     return 'Post %d' % post_id
+
+@app.route('/posts/create', methods=['POST', 'GET'])
+def create_post():
+    form = CreatePostForm()
+    if form.validate_on_submit():
+
+        try:
+            user = User.get(id = session['user_id'])
+            post = Post.create(title = form.title.data,
+                content = form.content.data,
+                author = user)
+            post.save()
+            flash('Create post %s succesfully.' % post.title)
+            return redirect('/index')
+        except User.DoesNotExist:
+            flash('Login Fail for email= %s, password=%s, remember_me=%s' %
+                (form.email.data, form.password.data, str(form.remember_me.data)))
+
+    return render_template('post/create.html',
+            title = 'Create post',
+            form = form)
 
 @app.route('/posts/')
 def show_posts():
